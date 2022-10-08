@@ -1,0 +1,33 @@
+#!/bin/bash
+
+
+while IFS="," read -r id prenom nom mdp role
+do
+   prenom=$2
+   nom=$3
+   mdp=$4
+   id=$1
+   role=$5
+   #mettre le nom en minuscule
+   username=${prenom,,}
+   #suppression des spaces
+   username=$(echo $username | sed 's/ //g')
+   
+   echo $id
+   
+   :'
+   
+      #creation dun utilisateur avec id, prenom et mot de passe
+   sudo useradd $username
+   
+   #Si l’utilisateur est un admin, donnez-lui le rôle de super utilisateur de votre système
+   if [[ $role == "Admin" ]]; then
+      sudo usermod -aG sudo $username
+      sudo usermod -aG nogroup $username
+   fi
+   #donner une couleur specifique
+   printf "\x1b[32m+ nouvel utilisateur:$prenom $nom\x1b[0m\n"   
+   
+   '
+
+done < Shell_Userlist.csv
